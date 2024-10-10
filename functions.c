@@ -2,14 +2,15 @@
 // Functions for PA 1
 
 #include <stdint.h> 
+#include <stdio.h>
 
-const int_32 MAX_ASCII = 127;
+const int32_t MAX_ASCII = 127;
 
 // Milestone 1
 
 int32_t is_ascii(char str[])
 {
-    int_32 index = 0;
+    int32_t index = 0;
 
     while (str[index] != 0)
     {
@@ -31,7 +32,7 @@ int32_t capitalize_ascii(char str[])
 
     while (str[index] != 0)
     {
-        if (str[index] > 'a' && str[index] < 'z')
+        if (str[index] >= 'a' && str[index] <= 'z')
         {
             str[index] = str[index] - 32;
             numCap += 1;
@@ -41,4 +42,49 @@ int32_t capitalize_ascii(char str[])
     }
 
     return numCap;
+}
+
+// Milestone 2
+int8_t width_from_start_byte(char start_byte)
+{
+    if ((start_byte & 0b10000000) == 0b00000000)
+    {
+        return 1;        // ascii
+    }
+    else if ((start_byte & 0b11000000) == 0b11000000)
+    {
+        if ((start_byte & 0b11110000) == 0b11110000)
+        {
+            return 4;   // 4 byte
+        }
+        else if ((start_byte & 0b11100000) == 0b11100000)
+        {
+            return 3;   // 3 byte
+        }
+        else
+        {
+            return 2;   // 2 byte
+        }
+    }
+
+    // continuation byte
+    return -1;
+}
+
+
+int main()
+{
+    char str[] = "abcd";
+
+    printf("The string abcd is a series of ascii chars %d \n", is_ascii(str));
+
+    printf("Before capitalizing: %s\n", str);
+    int numberOfCaps = capitalize_ascii(str);
+    printf("After capitalizing: %s \nNumber of letters capitalized: %d \n", str, numberOfCaps);
+
+    char hey[] = "Héy";
+    printf("Expecting: 2 \nGot: %d \n", width_from_start_byte(hey[1]));
+    printf("Expecting: 1 \nGot: %d \n", width_from_start_byte(hey[0]));
+    printf("Expecting: -1 \nGot: %d \n", width_from_start_byte(hey[2]));
+    
 }
