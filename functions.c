@@ -7,7 +7,7 @@
 
 const int32_t MAX_ASCII = 127;
 
-// Milestone 1 ---------------------------------------------------------
+// Milestone 1 -----------------------------------------------------------------------------
 
 int32_t is_ascii(char str[])
 {
@@ -45,7 +45,7 @@ int32_t capitalize_ascii(char str[])
     return numCap;
 }
 
-// Milestone 2 ---------------------------------------------------------
+// Milestone 2 -----------------------------------------------------------------------------
 
 int8_t width_from_start_byte(char start_byte)
 {
@@ -102,7 +102,7 @@ int32_t codepoint_index_to_byte_index(char str[], int32_t cpi)
     while (str[byte_index] != '\0')
     {
         // add byte value to index for each cpi
-        byte_index += width_from_start_byte(byte_index);
+        byte_index += width_from_start_byte(str[byte_index]);
         cpi_count += 1;
 
         if (cpi_count == cpi)
@@ -132,6 +132,13 @@ void utf8_substring(char str[], int32_t cpi_start, int32_t cpi_end, char result[
 
         result[result_index] = '\0';
     }
+}
+
+// Milestone 3 -----------------------------------------------------------------------------
+
+int32_t codepoint_at(char str[], int32_t cpi)
+{
+    
 }
 
 
