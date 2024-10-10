@@ -6,7 +6,7 @@
 
 const int32_t MAX_ASCII = 127;
 
-// Milestone 1
+// Milestone 1 ---------------------------------------------------------
 
 int32_t is_ascii(char str[])
 {
@@ -44,7 +44,8 @@ int32_t capitalize_ascii(char str[])
     return numCap;
 }
 
-// Milestone 2
+// Milestone 2 ---------------------------------------------------------
+
 int8_t width_from_start_byte(char start_byte)
 {
     if ((start_byte & 0b10000000) == 0b00000000)
@@ -71,6 +72,24 @@ int8_t width_from_start_byte(char start_byte)
     return -1;
 }
 
+int32_t utf8_strlen(char str[])
+{
+    int32_t index = 0;
+    int32_t strLen = 0;
+    while (str[index] != 0)
+    {
+        strLen += width_from_start_byte(str[index]);
+        index += 1;
+    }
+
+    return strLen;
+}
+
+int32_t codepoint_index_to_byte_index(char str[], int32_t cpi)
+{
+    
+}
+
 
 int main()
 {
@@ -83,8 +102,11 @@ int main()
     printf("After capitalizing: %s \nNumber of letters capitalized: %d \n", str, numberOfCaps);
 
     char hey[] = "Héy";
-    printf("Expecting: 2 \nGot: %d \n", width_from_start_byte(hey[1]));
+    printf("\nExpecting: 2 \nGot: %d \n", width_from_start_byte(hey[1]));
     printf("Expecting: 1 \nGot: %d \n", width_from_start_byte(hey[0]));
     printf("Expecting: -1 \nGot: %d \n", width_from_start_byte(hey[2]));
+
+    char Joseph[] = "Joséph";
+    printf("\nLength of Joséph \nExpecting: 6 \nGot: %d \n", utf8_strlen(Joseph));
     
 }
