@@ -3,6 +3,7 @@
 
 #include <stdint.h> 
 #include <stdio.h>
+#include <string.h>
 
 const int32_t MAX_ASCII = 127;
 
@@ -87,8 +88,10 @@ int32_t utf8_strlen(char str[])
 
 int32_t codepoint_index_to_byte_index(char str[], int32_t cpi)
 {
-    
+    return strlen(str) - utf8_strlen(str) + cpi;
 }
+
+
 
 
 int main()
@@ -108,5 +111,7 @@ int main()
 
     char Joseph[] = "Joséph";
     printf("\nLength of Joséph \nExpecting: 6 \nGot: %d \n", utf8_strlen(Joseph));
+
+    printf("\nCodepoint index %d is byte index %d\n", 4, codepoint_index_to_byte_index("Josééph", 4));
     
 }
