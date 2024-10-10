@@ -157,7 +157,7 @@ int main()
     printf("Expecting: 4 \nGot: %d \n", width_from_start_byte(hey[4]));
     printf("Expecting: -1 \nGot: %d \n", width_from_start_byte(hey[2]));
 
-    char Joseph[] = "Joséph";
+    char joesph[] = "Joséph";
     printf("\nLength of Joséph \nExpecting: 7 \nGot: %d \n", utf8_strlen("🦀🦮🦮🦀🦀🦮🦮"));
 
     printf("\nCodepoint index is %d byte index %d\n", 3, codepoint_index_to_byte_index("🦀🦮🦮🦀🦀🦮🦮", 3));
@@ -165,5 +165,8 @@ int main()
     char result[17];
     utf8_substring("🦀🦮🦮🦀🦀🦮🦮", 3, 7, result);
     printf("\nString: 🦀🦮🦮🦀🦀🦮🦮\nSubstring: %s \n", result); // these emoji are 4 bytes long
+
+    printf("\nCodepoint at %d in %s is %d\n", 3, joesph, codepoint_at(joesph, 3)); // 'p' is the 4th codepoint
+
 
 }
