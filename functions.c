@@ -178,6 +178,22 @@ int32_t codepoint_at(char str[], int32_t cpi)
     return decimal_value;
 }
 
+char is_animal_emoji_at(char str[], int32_t cpi)
+{
+    int32_t code_point = codepoint_at(str, cpi);
+    int32_t lower_first_bound = codepoint_at("🐀", 0);
+    int32_t upper_first_bound = codepoint_at("🐿️", 0);
+    int32_t lower_second_bound = codepoint_at("🦀", 0);
+    int32_t upper_second_bound = codepoint_at("🦮", 0);
+    if ((code_point >= lower_first_bound && code_point <= upper_first_bound) || 
+        (code_point >= lower_second_bound && code_point <= upper_second_bound))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 
 int main()
 {
@@ -205,5 +221,7 @@ int main()
 
     printf("\nCodepoint at %d in %s is %d\n", 4, joesph, codepoint_at(joesph, 4)); // 'p' is the 4th codepoint
 
-
+    printf("\nIs 🦮 an animal?\n%s \n", (is_animal_emoji_at("🦮", 0)) ? "Yes!" : "No!" );
+    printf("Is 🦂 an animal?\n%s \n", (is_animal_emoji_at("🦂", 0)) ? "Yes!" : "No!" );
+    printf("Is Jeff an animal?\n%s \n", (is_animal_emoji_at("Jeff", 0)) ? "Yes!" : "No!" );
 }
