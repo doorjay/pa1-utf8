@@ -79,6 +79,7 @@ int32_t utf8_strlen(char str[])
     int32_t strLen = 0;
     while (str[index] != 0)
     {
+        // add the length of each char and progress by that length
         strLen += width_from_start_byte(str[index]);
         index += 1;
     }
@@ -138,7 +139,43 @@ void utf8_substring(char str[], int32_t cpi_start, int32_t cpi_end, char result[
 
 int32_t codepoint_at(char str[], int32_t cpi)
 {
-    
+    int32_t byte_index = codepoint_index_to_byte_index(str, cpi);
+    if (byte_index == -1)
+    {
+        return -1;
+    }
+
+    int8_t char_length = width_from_start_byte(str[byte_index]);
+    int32_t decimal_value = 0;
+    switch (char_length)
+    {
+        case 1:  // Single byte (ASCII)
+            decimal_value = str[byte_index];
+            break;
+
+        case 2:  // 2-byte character: extract 5 bits from the first byte and 6 bits from the second byte.
+            decimal_value = (str[byte_index] & 0b00011111) << 6;  // Extract 5 bits from first byte (0b110xxxxx).
+            decimal_value |= (str[byte_index + 1] & 0b00111111);  // Extract 6 bits from second byte (0b10xxxxxx).
+            break;
+
+        case 3:  // 3-byte character: extract 4 bits from the first byte, 6 bits from the second and third bytes.
+            decimal_value = (str[byte_index] & 0b00001111) << 12;  // Extract 4 bits from first byte (0b1110xxxx).
+            decimal_value |= (str[byte_index + 1] & 0b00111111) << 6;  // Extract 6 bits from second byte.
+            decimal_value |= (str[byte_index + 2] & 0b00111111);  // Extract 6 bits from third byte.
+            break;
+
+        case 4:  // 4-byte character: extract 3 bits from the first byte, 6 bits from the next three bytes.
+            decimal_value = (str[byte_index] & 0b00000111) << 18;  // Extract 3 bits from first byte (0b11110xxx).
+            decimal_value |= (str[byte_index + 1] & 0b00111111) << 12;  // Extract 6 bits from second byte.
+            decimal_value |= (str[byte_index + 2] & 0b00111111) << 6;  // Extract 6 bits from third byte.
+            decimal_value |= (str[byte_index + 3] & 0b00111111);  // Extract 6 bits from fourth byte.
+            break;
+
+        default:
+            return -1;
+    }
+
+    return decimal_value;
 }
 
 
@@ -166,7 +203,7 @@ int main()
     utf8_substring("🦀🦮🦮🦀🦀🦮🦮", 3, 7, result);
     printf("\nString: 🦀🦮🦮🦀🦀🦮🦮\nSubstring: %s \n", result); // these emoji are 4 bytes long
 
-    printf("\nCodepoint at %d in %s is %d\n", 3, joesph, codepoint_at(joesph, 3)); // 'p' is the 4th codepoint
+    printf("\nCodepoint at %d in %s is %d\n", 4, joesph, codepoint_at(joesph, 4)); // 'p' is the 4th codepoint
 
 
 }
