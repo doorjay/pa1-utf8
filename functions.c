@@ -88,10 +88,51 @@ int32_t utf8_strlen(char str[])
 
 int32_t codepoint_index_to_byte_index(char str[], int32_t cpi)
 {
-    return strlen(str) - utf8_strlen(str) + cpi;
+    if (str == NULL || cpi < 0)
+    {
+        return -1;
+    }
+    if (cpi == 0)
+    {
+        return 0;
+    }
+
+    int32_t byte_index = 0;
+    int32_t cpi_count = 0;
+    while (str[byte_index] != '\0')
+    {
+        // add byte value to index for each cpi
+        byte_index += width_from_start_byte(byte_index);
+        cpi_count += 1;
+
+        if (cpi_count == cpi)
+        {
+            return byte_index;
+        }
+    }
+
+    // if gone through entire string without finding index
+    return -1;
 }
 
+void utf8_substring(char str[], int32_t cpi_start, int32_t cpi_end, char result[])
+{
+    if (cpi_start < cpi_end && cpi_start > 0 && cpi_end > 0)
+    {
+        int32_t byte_start = codepoint_index_to_byte_index(str, cpi_start);
+        int32_t byte_end = codepoint_index_to_byte_index(str, cpi_end);
+        int32_t result_index = 0;
 
+        while(byte_start <= byte_end)
+        {
+            result[result_index] = str[byte_start];
+            result_index += 1;
+            byte_start += 1;
+        }
+
+        result[result_index] = '\0';
+    }
+}
 
 
 int main()
@@ -104,14 +145,18 @@ int main()
     int numberOfCaps = capitalize_ascii(str);
     printf("After capitalizing: %s \nNumber of letters capitalized: %d \n", str, numberOfCaps);
 
-    char hey[] = "Héy";
-    printf("\nExpecting: 2 \nGot: %d \n", width_from_start_byte(hey[1]));
-    printf("Expecting: 1 \nGot: %d \n", width_from_start_byte(hey[0]));
+    char hey[] = "🦀🦮🦮🦀🦀🦮🦮";
+    printf("\nExpecting: -1 \nGot: %d \n", width_from_start_byte(hey[1]));
+    printf("Expecting: 4 \nGot: %d \n", width_from_start_byte(hey[4]));
     printf("Expecting: -1 \nGot: %d \n", width_from_start_byte(hey[2]));
 
     char Joseph[] = "Joséph";
-    printf("\nLength of Joséph \nExpecting: 6 \nGot: %d \n", utf8_strlen(Joseph));
+    printf("\nLength of Joséph \nExpecting: 7 \nGot: %d \n", utf8_strlen("🦀🦮🦮🦀🦀🦮🦮"));
 
-    printf("\nCodepoint index %d is byte index %d\n", 4, codepoint_index_to_byte_index("Josééph", 4));
+    printf("\nCodepoint index is %d byte index %d\n", 3, codepoint_index_to_byte_index("🦀🦮🦮🦀🦀🦮🦮", 3));
     
+    char result[17];
+    utf8_substring("🦀🦮🦮🦀🦀🦮🦮", 3, 7, result);
+    printf("\nString: 🦀🦮🦮🦀🦀🦮🦮\nSubstring: %s \n", result); // these emoji are 4 bytes long
+
 }
