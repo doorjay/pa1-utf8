@@ -15,7 +15,7 @@ int32_t is_ascii(char str[])
 
     while (str[index] != 0)
     {
-        if (str[index] > MAX_ASCII || str[index < 0])
+        if (str[index] > MAX_ASCII || str[index] < 0)
         {
             return 0;
         }
@@ -118,22 +118,35 @@ int32_t codepoint_index_to_byte_index(char str[], int32_t cpi)
 
 void utf8_substring(char str[], int32_t cpi_start, int32_t cpi_end, char result[])
 {
-    if (cpi_start < cpi_end && cpi_start >= 0 && cpi_end >= 0)
+    // Ensure indices are valid
+    if (cpi_start < 0 || cpi_start >= cpi_end)
     {
-        int32_t byte_start = codepoint_index_to_byte_index(str, cpi_start);
-        int32_t byte_end = codepoint_index_to_byte_index(str, cpi_end);
-        int32_t result_index = 0;
-        int32_t str_max = utf8_strlen(str);
-
-        while(byte_start <= byte_end && byte_start < str_max)
-        {
-            result[result_index] = str[byte_start];
-            result_index += 1;
-            byte_start += 1;
-        }
-
-        result[result_index] = '\0';
+        result[0] = '\0';  // Return an empty result for invalid input
+        return;
     }
+
+    // Get the actual number of code points in the string
+    int32_t total_codepoints = utf8_strlen(str);
+
+    // If cpi_end exceeds the total number of code points, clamp it to the end of the string
+    if (cpi_end > total_codepoints)
+    {
+        cpi_end = total_codepoints;
+    }
+
+    int32_t byte_start = codepoint_index_to_byte_index(str, cpi_start);
+    int32_t byte_end = codepoint_index_to_byte_index(str, cpi_end);
+    int32_t result_index = 0;
+
+    // Extract substring from byte_start to byte_end
+    while (byte_start < byte_end && str[byte_start] != '\0')
+    {
+        result[result_index] = str[byte_start];
+        result_index += 1;
+        byte_start += 1;
+    }
+
+    result[result_index] = '\0';  // Null-terminate the result
 }
 
 // Milestone 3 -----------------------------------------------------------------------------
