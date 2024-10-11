@@ -40,7 +40,7 @@ int main()
 
     char substring[25];
     utf8_substring(str, 0, 6, substring);
-    printf("Substring of the first 6 code points: %s \n", substring);
+    printf("Substring of the first 6 code points: %s\n", substring);
 
     printf("Code points as decimal numbers: ");
     int32_t str_len = utf8_strlen(str);
