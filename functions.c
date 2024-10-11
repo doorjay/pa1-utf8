@@ -184,10 +184,13 @@ int32_t codepoint_at(char str[], int32_t cpi)
 char is_animal_emoji_at(char str[], int32_t cpi)
 {
     int32_t code_point = codepoint_at(str, cpi);
-    int32_t lower_first_bound = codepoint_at("🐀", 0);
-    int32_t upper_first_bound = codepoint_at("🐿️", 0);
-    int32_t lower_second_bound = codepoint_at("🦀", 0);
-    int32_t upper_second_bound = codepoint_at("🦮", 0);
+
+    // emoji bounds
+    int32_t lower_first_bound = 0x1F400;  // 🐀 (Rat)
+    int32_t upper_first_bound = 0x1F43F;  // 🐿 (Chipmunk)
+    int32_t lower_second_bound = 0x1F980; // 🦀 (Crab)
+    int32_t upper_second_bound = 0x1F9AE; // 🦮 (Guide Dog)
+
     if ((code_point >= lower_first_bound && code_point <= upper_first_bound) || 
         (code_point >= lower_second_bound && code_point <= upper_second_bound))
     {

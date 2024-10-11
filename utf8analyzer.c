@@ -51,24 +51,31 @@ int main()
     }
     printf("\n");
 
-    printf("Animal emojis: ");
 
     index = 0;
+
+    printf("Animal emojis: ");
     while (index < str_len)
     {
-        int32_t char_length = width_from_start_byte(str[index]);
+        // Check if this code point is an animal emoji
         if (is_animal_emoji_at(str, index))
         {
-            for (int32_t i = 0; i < char_length; i += 1)
-            {
-                printf("%c", str[index + i]);
-            }
+            // Find the byte index of this emoji
+            int32_t byte_index = codepoint_index_to_byte_index(str, index);
+            int8_t char_length = width_from_start_byte(str[byte_index]);
 
-            printf(" "); // space between emojis
+            // Print the entire multi-byte emoji
+            for (int i = 0; i < char_length; ++i)
+            {
+                printf("%c", str[byte_index + i]);
+            }
+            printf(" ");  // Add a space after the emoji
         }
-        
-        index += char_length; // move by char length
+
+        // Increment the index to move to the next code point
+        index += 1;
     }
+
     printf("\n");
     
 }
