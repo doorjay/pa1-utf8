@@ -1,0 +1,9 @@
+Enter a UTF-8 encoded string: 
+Valid ASCII: false
+Uppercased ASCII: 🐉🐌🦋🦢
+Length in bytes: 16
+Number of code points: 4
+Bytes per code point: 4 4 4 4
+Substring of the first 6 code points: 🐉🐌🦋🦢
+Code points as decimal numbers: 128009 128012 129419 129442
+Animal emojis: 🐉 🐌 🦋 🦢
