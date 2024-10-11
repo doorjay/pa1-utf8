@@ -15,7 +15,7 @@ int32_t is_ascii(char str[])
 
     while (str[index] != 0)
     {
-        if (str[index] > MAX_ASCII)
+        if (str[index] > MAX_ASCII || str[index < 0])
         {
             return 0;
         }
@@ -118,14 +118,14 @@ int32_t codepoint_index_to_byte_index(char str[], int32_t cpi)
 
 void utf8_substring(char str[], int32_t cpi_start, int32_t cpi_end, char result[])
 {
-    if (cpi_start < cpi_end && cpi_start > 0 && cpi_end > 0)
+    if (cpi_start < cpi_end && cpi_start >= 0 && cpi_end >= 0)
     {
         int32_t byte_start = codepoint_index_to_byte_index(str, cpi_start);
-        int32_t byte_end = (utf8_strlen(str) > cpi_end) ? codepoint_index_to_byte_index(str, cpi_end) : 
-                                                          codepoint_index_to_byte_index(str, utf8_strlen(str) - 1);
+        int32_t byte_end = codepoint_index_to_byte_index(str, cpi_end);
         int32_t result_index = 0;
+        int32_t str_max = utf8_strlen(str);
 
-        while(byte_start <= byte_end)
+        while(byte_start <= byte_end && byte_start < str_max)
         {
             result[result_index] = str[byte_start];
             result_index += 1;
@@ -148,6 +148,8 @@ int32_t codepoint_at(char str[], int32_t cpi)
 
     int8_t char_length = width_from_start_byte(str[byte_index]);
     int32_t decimal_value = 0;
+
+
     switch (char_length)
     {
         case 1:  // Single byte (ASCII)
@@ -196,6 +198,8 @@ char is_animal_emoji_at(char str[], int32_t cpi)
 }
 
 
+
+/*
 int main()
 {
     char str[] = "abcd";
@@ -226,3 +230,4 @@ int main()
     printf("Is 🦂 an animal?\n%s \n", (is_animal_emoji_at("🦂", 0)) ? "Yes!" : "No!" );
     printf("Is Jeff an animal?\n%s \n", (is_animal_emoji_at("Jeff", 0)) ? "Yes!" : "No!" );
 }
+*/
